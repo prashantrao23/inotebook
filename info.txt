@@ -1,0 +1,24 @@
+*********** Backend *******************
+1. npm init -> give project details
+2. npm i express -> to install express js
+3. npm i mongoose -> to install mongoose to create models
+4. npm i -D nodemoon -> liveserver and -D for adding it into dependencies
+5. npm install express-validator
+install router
+install bcrypt -> for hasing
+npm install jsonwebtoken
+npm install cors -> install it in backend
+
+
+We are creating endpoint in Thunder client, create user. login, get logged in user  
+
+
+*********** FrontEnd ******************
+
+npm i -g concurrently -> so that we can run both backend and frontend simultanuosly 
+in package.json we have added this command -->> "both": "concurrently \"npm run start\" \"nodemon backend/index.js\""
+Run multiple commands concurrently. Like npm run watch-js & npm run watch-less but better.
+command -> npm run both
+
+npm i react-router-dom -> for routing
+
