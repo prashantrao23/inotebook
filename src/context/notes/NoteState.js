@@ -5,7 +5,8 @@ import NoteContext from "./noteContext"; //importing notecontext
 const NoteState = (props) => {
 
     const host = 'http://127.0.0.1:5000';
-    const initialNotes = []
+    const initialNotes = [];
+    const authToken =localStorage.getItem('token');
 
     const [notes, setNotes] = useState(initialNotes)
 
@@ -15,7 +16,7 @@ const NoteState = (props) => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRhNTRiNzZlYjQxNzNjMDNjOGM2ZjJhIn0sImlhdCI6MTY4ODU2OTgxNH0.pbMfgxVmwAB1TLUc0slMyOz4I-wolnMtyCfH7wfaL84"
+                "auth-token": authToken
             },
 
             // body: JSON.stringify({ title, description, tag }), // body data type must match "Content-Type" header
@@ -33,7 +34,7 @@ const NoteState = (props) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRhNTRiNzZlYjQxNzNjMDNjOGM2ZjJhIn0sImlhdCI6MTY4ODU2OTgxNH0.pbMfgxVmwAB1TLUc0slMyOz4I-wolnMtyCfH7wfaL84"
+                "auth-token": authToken
             },
 
             body: JSON.stringify({ title, description, tag }), // body data type must match "Content-Type" header
@@ -57,7 +58,7 @@ const NoteState = (props) => {
 
             headers: {
                 "Content-Type": "application/json",
-                "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRhNTRiNzZlYjQxNzNjMDNjOGM2ZjJhIn0sImlhdCI6MTY4ODU2OTgxNH0.pbMfgxVmwAB1TLUc0slMyOz4I-wolnMtyCfH7wfaL84"
+                "auth-token": authToken
                 // 'Content-Type': 'application/x-www-form-urlencoded',
             },
 
@@ -80,24 +81,27 @@ const NoteState = (props) => {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRhNTRiNzZlYjQxNzNjMDNjOGM2ZjJhIn0sImlhdCI6MTY4ODU2OTgxNH0.pbMfgxVmwAB1TLUc0slMyOz4I-wolnMtyCfH7wfaL84"
+                "auth-token": authToken
             },
 
             body: JSON.stringify({ title, description, tag }), // body data type must match "Content-Type" header
         });
         // return response.json(); // parses JSON response into native JavaScript objects
-        const json = response.json();
+        const json = await response.json();
         console.log(json)
 
+        let updatedNotes = JSON.parse(JSON.stringify(notes))
         //Logic to edit in client
-        for (let index = 0; index < initialNotes.length; index++) {
-            const element = initialNotes[index];
+        for (let index = 0; index < updatedNotes.length; index++) {
+            const element = updatedNotes[index];
             if (element._id === id) {
-                element.title = title;
-                element.description = description;
-                element.tag = tag;
+                updatedNotes[index].title = title;
+                updatedNotes[index].description = description; 
+                updatedNotes[index].tag = tag;
+                break;
             }
         }
+        setNotes(updatedNotes)
     }
 
 

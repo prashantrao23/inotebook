@@ -16,6 +16,8 @@ router.post('/createuser', [
     body('password', 'Password must be atleast 5 character').isLength({ min: 5 })
 ], async (req, res) => {
 
+    let success = false;
+
     //Check if there are any error in validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -33,7 +35,7 @@ router.post('/createuser', [
 
         //securing password using hashimg and salt
         const salt = await bcrypt.genSalt(10);
-        securePass = await bcrypt.hash(req.body.password, salt)
+        let securePass = await bcrypt.hash(req.body.password, salt)
 
         //we dont need .then if we are using await
         //create a user
@@ -50,7 +52,8 @@ router.post('/createuser', [
             }
         }
         const authToken = jwt.sign(data, JWT_SECRET);
-        res.json({ authToken });
+        success = true
+        res.json({ success, authToken });
 
     }
     catch (error) {
@@ -66,6 +69,7 @@ router.post('/login', [
     body('password', 'Enter your password').exists()
 ], async (req, res) => {
 
+    let success = false;
     //Check if there are any error in validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -95,7 +99,8 @@ router.post('/login', [
             }
         }
         const authToken = jwt.sign(data, JWT_SECRET);
-        res.json({ authToken });
+        success = true
+        res.json({ success, authToken });
 
     }
     catch (error) {

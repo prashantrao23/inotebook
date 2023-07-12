@@ -6,6 +6,7 @@ const connectToMongo = () => {
         console.log('Connected to Mongo successfully');
     }).catch((err) => {
         console.log(err);
+        // eslint-disable-next-line no-undef
         handleError(err)
     })
 }

@@ -3,7 +3,7 @@ import noteContext from '../context/notes/noteContext';
 
 const Noteitem = (props) => {
 
-    const { note, updateNote } = props;
+    const { note, updateNote, showalert } = props;
     const context = useContext(noteContext);
     const { deleteNote } = context;
 
@@ -16,7 +16,7 @@ const Noteitem = (props) => {
                     <p className="card-text">{note.description}</p>
                     <div className="d-flex justify-content-between">
                         <i className="fa-solid fa-pen-to-square " style={{ color: "#0e98dd", }} onClick={() => { updateNote(note) }} ></i>
-                        <i className="fa-sharp fa-solid fa-trash danger" style={{ color: "#dd0e0e", }} onClick={() => { deleteNote(note._id) }}></i>
+                        <i className="fa-sharp fa-solid fa-trash danger" style={{ color: "#dd0e0e", }} onClick={() => { deleteNote(note._id); showalert("Note deleted !!","success") }}></i>
                     </div>
                 </div>
                 <div className="card-footer">
