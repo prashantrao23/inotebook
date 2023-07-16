@@ -32,8 +32,8 @@ function App() {
       <BrowserRouter>
 
         <Navbar showalert={showalert}/>
+        <div className="">
         <Alerts alert={alert} />
-        <div className="container app-container">
           <Routes>
 
             <Route exact path='/' element={<Home showalert={showalert} />} />
