@@ -30,7 +30,7 @@ router.post('/createuser', [
         //check if user with same email alrady exists
         let user = await User.findOne({ email: req.body.email });
         if (user) {
-            return res.status(400).json({ errors: 'Sorry, a user with same email address already exists' });
+            return res.status(400).json({success:success, message: 'Sorry, a user with same email address already exists' });
         }
 
         //securing password using hashimg and salt

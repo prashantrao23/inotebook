@@ -28,12 +28,12 @@ function App() {
 
   return (
     //Now the state of NoteState will be available inside all of below components and all components which are available inside below components
-    <NoteState>
+    <NoteState showalert={showalert}>
       <BrowserRouter>
 
         <Navbar showalert={showalert}/>
         <Alerts alert={alert} />
-        <div className="container">
+        <div className="container app-container">
           <Routes>
 
             <Route exact path='/' element={<Home showalert={showalert} />} />

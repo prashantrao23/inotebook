@@ -4,35 +4,56 @@ import { useNavigate } from 'react-router-dom';
 const Singup = (props) => {
 
     const host = 'http://127.0.0.1:5000'
-    // const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRhYjlhODYzMWM4YzAzMDg1Y2E0MmJmIn0sImlhdCI6MTY4ODk2NzgxNH0.qn5Xv8fg21ylRGxWRNBKNwKckieAHKRaU15iYOkdzf8';
-
     const [credential, setCredential] = useState({ username: "", email: "", password: "" })
 
     let navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const firstPassword = e.target.password.value;
+        const confirmPassword = e.target.c_password.value;
 
-        const response = await fetch(`${host}/api/auth/createuser`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                // "auth-token": authToken
-            },
-            body: JSON.stringify({ name: credential.username, email: credential.email, password: credential.password }),
-        });
+        if (confirmPassword !== firstPassword) {
+            console.log("wrong password")
+            props.showalert("Confirm password must be same as password", "danger");
 
-        // return response.json(); // parses JSON response into native JavaScript objects
-        const json = await response.json();
-        console.log(json);
-        if (json.success) {
-            //redirect  and save authtoken
-            localStorage.setItem('token', json.authToken);
-            navigate('/');
-            props.showalert("Account created successfully","success");
         }
         else {
-            props.showalert("Enter correct details!!!","danger");
+
+
+            const response = await fetch(`${host}/api/auth/createuser`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name: credential.username, email: credential.email, password: credential.password }),
+            });
+
+            // return response.json(); // parses JSON response into native JavaScript objects
+            const json = await response.json();
+            console.log(json);
+            if (json.success) {
+                //redirect  and save authtoken
+                localStorage.setItem('token', json.authToken);
+                navigate('/');
+                props.showalert(`${json.message}`, "success");
+            } else {
+                if (json.message === undefined) {
+                    props.showalert(`Some error occured, Unable to sign up `, 'danger');
+                } else {
+                    props.showalert(`${json.message}`, 'danger');
+                }
+            }
+
+            // if (json.success) {
+            //     //redirect  and save authtoken
+            //     localStorage.setItem('token', json.authToken);
+            //     navigate('/');
+            //     props.showalert("Account created successfully", "success");
+            // }
+            // else {
+            //     props.showalert("Enter correct details!!!", "danger");
+            // }
         }
 
     }
@@ -41,6 +62,15 @@ const Singup = (props) => {
 
         //Whatever is changing, its value become its name
         setCredential({ ...credential, [e.target.name]: e.target.value })
+    }
+
+    const onChange_confirm = (e) => {
+        if (e.target.value !== credential.password) {
+            console.log("Password does not match")
+        }
+        else {
+            console.log("Password matched !!!")
+        }
     }
 
     return (
@@ -58,14 +88,14 @@ const Singup = (props) => {
                 </div>
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">Password</label>
-                    <input type="password" className="form-control" id="password" name="password" onChange={onChange} value={credential.password} minLength={5} required/>
+                    <input type="password" className="form-control" id="password" name="password" onChange={onChange} value={credential.password} minLength={5} required />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="c_password" className="form-label">Confirm Password</label>
-                    {/* <input type="password" className="form-control" id="c_password" name="c_password" onChange={onChange} value={credential.password} required/> */}
+                    <input type="password" className="form-control" id="c_password" name="c_password" onChange={onChange_confirm} required />
                 </div>
 
-                <button type="submit" className="btn btn-primary">Sign Up</button>
+                <button type="submit" id="sign_up_btn" className="btn btn-primary">Sign Up</button>
             </form>
         </div>
     )

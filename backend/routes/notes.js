@@ -22,6 +22,8 @@ router.post('/createnote', fetchuser, [
 
     //destructuring: fetching these details from req.body
     const { title, description, tag } = req.body;
+    let success = false;
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -33,7 +35,8 @@ router.post('/createnote', fetchuser, [
             title, description, tag, user: req.user.id
         })
         const savednote = await note.save();
-        res.json(savednote);
+        success = true
+        res.json({ success : success, message:'Note added successfully', savednote: savednote });
 
     }
     catch (error) {
@@ -50,6 +53,8 @@ router.post('/createnote', fetchuser, [
 router.put('/updatenote/:id', fetchuser, async (req, res) => {
 
     const { title, description, tag } = req.body;
+    let success = false;
+
 
     try {
         //create a newNote object
@@ -70,7 +75,9 @@ router.put('/updatenote/:id', fetchuser, async (req, res) => {
 
         //new:true -> if some new content comes then create it
         note = await Note.findByIdAndUpdate(req.params.id, { $set: newNote }, { new: true })
-        res.json({ note });
+        success = true;
+        res.json({ success : success, message:'Note updated!!!', note: note });
+        // res.json({ note });
     }
     catch (error) {
         console.error(error.message);
@@ -84,6 +91,8 @@ router.put('/updatenote/:id', fetchuser, async (req, res) => {
 //Route4: Delete notes using: Delete "/api/note/deletenote".Login required
 router.delete('/deletenote/:id', fetchuser, async (req, res) => {
 
+    let success = false;
+
     try {
         //Find the note to be delete and delete it
         // using let instead of const, coz it was throwing error
@@ -95,9 +104,10 @@ router.delete('/deletenote/:id', fetchuser, async (req, res) => {
             return res.status(401).send("Not Allowed");
         }
 
-        //new:true -> if some new content comes then create it
+
         note = await Note.findByIdAndDelete(req.params.id)
-        res.json({ "Success": "Note has ben deleted", note: note });
+        success = true;
+        res.json({ success : success, message:'Your Note has been deleted', note: note });
     }
     catch (error) {
         console.error(error.message);

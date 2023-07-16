@@ -38,11 +38,11 @@ const Notes = (props) => {
     }
 
     const handleClick = (e) => {
-        console.log("Updating note...")
+        // console.log("Updating note...")
         editNote(note.id, note.e_title, note.e_description, note.e_tag);
         refClose.current.click();
-        console.log("Updated!!!")
-        showalert("Updated Successfully !!","success")
+        // console.log("Updated!!!")
+        // showalert("Updated Successfully !!","success")
     }
     const onChange = (e) => {
         //Whatever is changing, its value become its name
@@ -51,7 +51,7 @@ const Notes = (props) => {
 
     return (
         <div>
-            <Addnote showalert={showalert}/>
+            <Addnote />
 
             {/* <!-- Button trigger modal --> */}
             <button ref={ref} type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -97,7 +97,7 @@ const Notes = (props) => {
                 </div>
                 {notes.map((note) => {
                     return <div className="col-sm-3 my-3 mb-sm-0" key={note._id}>
-                        <Noteitem note={note} updateNote={updateNote} showalert={showalert}/>
+                        <Noteitem note={note} updateNote={updateNote}/>
                     </div>;
                 })}
 
