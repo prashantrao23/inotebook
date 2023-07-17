@@ -66,10 +66,10 @@ const Singup = (props) => {
 
     const onChange_confirm = (e) => {
         if (e.target.value !== credential.password) {
-            console.log("Password does not match")
+            // console.log("Password does not match")
         }
         else {
-            console.log("Password matched !!!")
+            // console.log("Password matched !!!")
         }
     }
 

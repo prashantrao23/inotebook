@@ -3,20 +3,16 @@ import { useNavigate, Link } from "react-router-dom";
 
 const Login = (props) => {
 
+    
     const host = 'http://127.0.0.1:5000';
 
     const [credential, setCredential] = useState({ email: "", password: "" })
 
     let navigate = useNavigate();
 
-    // TODO - dont let user get in login page if he's logged in
-    // (() => {
-    //     if(localStorage.getItem('token')){
-    //         navigate('/');
-    //     }
-    //   })();
-
-    
+    // if(localStorage.getItem('token')){
+    //     navigate('/');
+    // }
 
     const handleSubmit = async (e) => {
         e.preventDefault();

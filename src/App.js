@@ -8,6 +8,7 @@ import Alerts from "./components/Alerts";
 import Login from "./components/Login";
 import Singup from "./components/Singup";
 import { useState } from "react";
+import User from "./components/User";
 
 
 // TODO use context API for ALERT
@@ -40,6 +41,7 @@ function App() {
             <Route exact path='/about' element={<About />} />
             <Route exact path='/login' element={<Login showalert={showalert}/>} />
             <Route exact path='/singup' element={<Singup showalert={showalert}/>} />
+            <Route exact path='/user' element={<User showalert={showalert}/>} />
 
           </Routes>
         </div>

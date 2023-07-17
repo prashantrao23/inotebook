@@ -1,6 +1,7 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const User = require('../models/Users_m');
+const Note = require('../models/Notes_m');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -30,7 +31,7 @@ router.post('/createuser', [
         //check if user with same email alrady exists
         let user = await User.findOne({ email: req.body.email });
         if (user) {
-            return res.status(400).json({success:success, message: 'Sorry, a user with same email address already exists' });
+            return res.status(400).json({ success: success, message: 'Sorry, a user with same email address already exists' });
         }
 
         //securing password using hashimg and salt
@@ -53,7 +54,7 @@ router.post('/createuser', [
         }
         const authToken = jwt.sign(data, JWT_SECRET);
         success = true
-        res.json({ success, authToken });
+        res.json({ success: success, message: ' Account created ', authToken });
 
     }
     catch (error) {
@@ -100,7 +101,7 @@ router.post('/login', [
         }
         const authToken = jwt.sign(data, JWT_SECRET);
         success = true
-        res.json({ success, authToken });
+        res.json({ success: success, message: 'Login success', authToken });
 
     }
     catch (error) {
@@ -112,7 +113,7 @@ router.post('/login', [
 
 //Route 3: Get loggedin user details : Login required
 //where ever we need logged usr details we will add fetchuser like this
-router.post('/getuser', fetchuser, async (req, res) => {
+router.get('/getuser', fetchuser, async (req, res) => {
 
     try {
         const userId = req.user.id;
@@ -123,6 +124,108 @@ router.post('/getuser', fetchuser, async (req, res) => {
         console.error(error.message);
         res.status(500).send("Internal server error occured");
     }
+})
+
+
+//Route3: update users using: PUT "/api/user/updateuser".Login required
+//In API header we are sending JWT auth token 
+router.put('/updateuser/:id', fetchuser, async (req, res) => {
+
+    const { name, password, newPassword } = req.body;
+    let success = false;
+
+    //securing password using hashimg and salt
+    const salt = await bcrypt.genSalt(10);
+    let securePass = await bcrypt.hash(newPassword, salt)
+
+    try {
+
+        //create a updateUser object
+        const updateUser = {};
+        if (name) { updateUser.name = name };
+        if (password) { updateUser.password = securePass };
+
+
+        //Find the user to be updated and update it
+        // using let instead of const, coz we are updating the variable
+        let user = await User.findById(req.params.id);
+
+        //comparing user entered password in database
+        const passwordCompare = await bcrypt.compare(password, user.password);
+        if (!passwordCompare) {
+            return res.status(400).json({ success: success, message: 'Entered password is wrong' });
+        }
+
+        if (!user) { return res.status(404).send("Not Found") }
+
+        //Allow updation if user own this user
+        if (user._id.toString() !== req.user.id) {
+            return res.status(401).send("Not Allowed");
+        }
+
+        //new:true -> if some new content comes then create it
+        user = await User.findByIdAndUpdate(req.params.id, { $set: updateUser }, { new: true })
+        success = true;
+        res.json({ success: success, message: 'User updated!!!', user: user });
+        // res.json({ user });
+    }
+    catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal server error occured");
+    }
+
+
+})
+
+
+
+//Route4: Delete user using: Delete "/api/note/deletenote".Login required
+router.delete('/deleteUser/:id', fetchuser, async (req, res) => {
+
+    let success = false;
+
+    try {
+        //Find the note to be delete and delete it
+        // using let instead of const, coz it was throwing error
+        let user_d = await User.findById(req.params.id);
+        let notes = await Note.find({ user: req.user.id });
+        notes = (JSON.parse(JSON.stringify(notes)))
+
+
+        if (!user_d) { return res.status(404).send("Not Found") }
+
+        // dont Allow deletion if user dont own this note
+        if (user_d._id.toString() !== req.user.id) {
+            return res.status(401).send("Not Allowed to delete user");
+        }
+
+        notes.forEach(note => {
+            console.log(note.user);
+            if (note.user !== req.user.id) {
+                return res.status(401).send("Not Allowed to delete notes ");
+            }
+
+        });
+
+        user_d = await User.findByIdAndDelete(req.params.id)
+
+        for (const note of notes) {
+            console.log(note.user);
+            await Note.deleteMany({user:note.user});
+        }
+
+        // if(notes){
+        //     console.log("deleted notes")
+        // }
+        success = true;
+        res.json({ success: success, message: 'Your account has been permanatly deactivated and all your notes are deleted ', user_d: user_d, notes: notes });
+    }
+    catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal server error occured");
+    }
+
+
 })
 
 

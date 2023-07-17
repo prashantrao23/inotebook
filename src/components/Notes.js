@@ -54,12 +54,7 @@ const Notes = (props) => {
         <div>
             <Addnote />
 
-            {/* <!-- Button trigger modal --> */}
-            {/* <button ref={ref} type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Launch demo modal
-            </button> */}
-
-            {/* <!-- Modal --> */}
+           {/* <!-- Modal --> */}
             <div className={`${modal ? '' : 'hidden'} relative z-10`} aria-labelledby="modal-title" role="dialog" aria-modal="true">
 
                 <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
@@ -84,15 +79,18 @@ const Notes = (props) => {
                                             <form>
                                                 <div className="mb-3">
                                                     <label htmlFor="e_title" className="block text-sm font-medium leading-6 text-gray-900">Title</label>
-                                                    <input type="text" className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" id="e_title" name="e_title" value={note.e_title} onChange={onChange} minLength={5} required />
+                                                    <input type="text" className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+                                                    id="e_title" name="e_title" value={note.e_title} onChange={onChange} minLength={5} required />
                                                 </div>
                                                 <div className="mb-3">
                                                     <label htmlFor="e_description" className="block text-sm font-medium leading-6 text-gray-900">Description</label>
-                                                    <textarea rows={6} type="text" className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" id="e_description" name="e_description" value={note.e_description} onChange={onChange} minLength={5} required />
+                                                    <textarea rows={6} type="text" className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+                                                    id="e_description" name="e_description" value={note.e_description} onChange={onChange} minLength={5} required />
                                                 </div>
                                                 <div className="mb-3">
                                                     <label htmlFor="e_tag" className="block text-sm font-medium leading-6 text-gray-900">Tag</label>
-                                                    <input type="text" className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" id="e_tag" name="e_tag" value={note.e_tag} onChange={onChange} />
+                                                    <input type="text" className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+                                                    id="e_tag" name="e_tag" value={note.e_tag} onChange={onChange} />
                                                 </div>
                                             </form>
                                         </div>
