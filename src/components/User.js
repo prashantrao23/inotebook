@@ -7,7 +7,7 @@ import Useritem from './Useritem';
 const User = (props) => {
 
     const context = useContext(noteContext);
-    const { userdetail, fetchUser, editUser, deleteUser } = context;
+    const { fetchUser, editUser, deleteUser } = context;
     const { showalert } = props;
     const [modal, setModal] = useState(false)
     const [check, setCheck] = useState(false)
@@ -26,18 +26,19 @@ const User = (props) => {
         // eslint-disable-next-line
     }, [])
 
-    const [newUser, setNewuser] = useState({ id: "", username: "", email: "", password: "", change_password: "" })
+    const [newUser, setNewuser] = useState({ id: "", username: "", lastname: "", age: "", email: "", password: "", change_password: "" })
 
-    const updateNote = (currentUser) => {
+    const updateUser = (currentUser) => {
+        console.log("After click Edit button from user.js - UpdateNote function from User.js")
+        console.log(currentUser);
         setModal(true);
-        setNewuser({ id: currentUser._id, username: currentUser.name, email: currentUser.email, password: "", change_password: "" })
+        setNewuser({ id: currentUser._id, username: currentUser.name, lastname: currentUser.lastname, age: currentUser.age, email: currentUser.email, password: "", change_password: "" })
     }
 
     const deleteConfirm = (user_id) => {
         setDeletemodal(true)
         setDeleteuser({ id: user_id })
-        // console.log("delete confirm")
-    }
+     }
 
     const handleDelete = (e) => {
         deleteUser(delete_user.id);
@@ -47,9 +48,10 @@ const User = (props) => {
 
     const handleClick = (e) => {
         e.preventDefault();
-        console.log(newUser.id + ' with ' + newUser.username + ' pass :' + newUser.password)
-        editUser(newUser.id, newUser.username, newUser.password, newUser.change_password);
-        //window.location.reload(); //page was displaying after updating. Need to check this issue
+        console.log("After click update button in modal " )
+        console.log(newUser.id, newUser.username, newUser.lastname, newUser.age, newUser.password, newUser.change_password);
+        editUser(newUser.id, newUser.username, newUser.lastname, newUser.age, newUser.password, newUser.change_password);
+        //window.location.reload(); //I had to use this so that when i click on update the page get reload
     }
     const onChange = (e) => {
         setNewuser({ ...newUser, [e.target.name]: e.target.value })
@@ -85,6 +87,16 @@ const User = (props) => {
                                                     <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">Name</label>
                                                     <input type="text" className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                         id="username" name="username" value={newUser.username} onChange={onChange} minLength={5} required />
+                                                </div>
+                                                <div className="mb-3">
+                                                    <label htmlFor="lastname" className="block text-sm font-medium leading-6 text-gray-900">Last Name</label>
+                                                    <input type="text" className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                        id="lastname" name="lastname" value={newUser.lastname} onChange={onChange} minLength={5} required />
+                                                </div>
+                                                <div className="mb-3">
+                                                    <label htmlFor="age" className="block text-sm font-medium leading-6 text-gray-900">Age</label>
+                                                    <input type="number" className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                        id="age" name="age" value={newUser.age} onChange={onChange} minLength={5} required />
                                                 </div>
                                                 <div className="mb-3">
                                                     <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">Email</label>
@@ -162,8 +174,14 @@ const User = (props) => {
             {/* End of Delete user Modal */}
 
             <div>
+                {/* {userdetail.map((user)=>{
+                    console.log({key:user.user._id})
+                    return <div className="" key={user.user._id}>
+                        <Useritem detail={user.user} updateNote={updateNote} deleteConfirm={deleteConfirm} />
+                        </div>
+                })} */}
 
-                <Useritem detail={userdetail} updateNote={updateNote} deleteConfirm={deleteConfirm} />
+                <Useritem updateUser={updateUser} deleteConfirm={deleteConfirm} />
 
             </div>
         </div>

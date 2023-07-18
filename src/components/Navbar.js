@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import noteContext from '../context/notes/noteContext';
+
 
 
 const Navbar = (props) => {
 
     const [mobileMenu, setmobileMenu] = useState(false)
     const [profile, setProfile] = useState(false)
+    const context = useContext(noteContext);
+    const { userdetail } = context;
 
     const { showalert } = props;
     let navigate = useNavigate();
@@ -60,7 +64,8 @@ const Navbar = (props) => {
                                 <Link className="bg-cyan-600 rounded-md p-2 text-white font-semibold mx-1" to="/login" >Login</Link>
                                 <Link className="bg-cyan-600 rounded-md p-2 text-white font-semibold mx-1" to="/singup" >Sing Up</Link>
                             </div> : <div className="relative ml-3">
-                                <div>
+                                <div className='flex'>
+                                    {userdetail.user && <p className='text-white font-semibold text-center align-middle mr-2'>{userdetail.user.name}</p>}
                                     <button onClick={() => setProfile(!profile)} type="button" className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                         <span className="sr-only">Open user menu</span>
                                         <img className="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />

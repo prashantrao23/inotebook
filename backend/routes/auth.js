@@ -14,7 +14,9 @@ const JWT_SECRET = 'JWTPriv@teKEY';
 router.post('/createuser', [
     body('name', 'Enter valid name and atleast 5 character').notEmpty().isLength({ min: 3 }).escape(),  //escape is a sanitizer, means no one can send data through url manually
     body('email', 'Enter valid email').isEmail(), //these are vaidators
-    body('password', 'Password must be atleast 5 character').isLength({ min: 5 })
+    body('password', 'Password must be atleast 5 character').isLength({ min: 5 }),
+    body('lastname', 'Enter your last name').notEmpty(),
+    body('age', 'Enter valid age').notEmpty()
 ], async (req, res) => {
 
     let success = false;
@@ -42,6 +44,8 @@ router.post('/createuser', [
         //create a user
         user = await User.create({
             name: req.body.name,
+            lastname: req.body.lastname,
+            age: req.body.age,
             email: req.body.email,
             password: securePass
         })
@@ -118,7 +122,9 @@ router.get('/getuser', fetchuser, async (req, res) => {
     try {
         const userId = req.user.id;
         const user = await User.findById(userId).select('-password'); //w are not fetching password
-        res.send(user);
+        const countNotes = await Note.countDocuments({ user: userId });
+        // console.log(user, countNotes)
+        res.json({ user, countNotes });
 
     } catch (error) {
         console.error(error.message);
@@ -131,7 +137,7 @@ router.get('/getuser', fetchuser, async (req, res) => {
 //In API header we are sending JWT auth token 
 router.put('/updateuser/:id', fetchuser, async (req, res) => {
 
-    const { name, password, newPassword } = req.body;
+    const { name, lastname, age, password, newPassword } = req.body;
     let success = false;
 
     //securing password using hashimg and salt
@@ -143,7 +149,9 @@ router.put('/updateuser/:id', fetchuser, async (req, res) => {
         //create a updateUser object
         const updateUser = {};
         if (name) { updateUser.name = name };
-        if (password) { updateUser.password = securePass };
+        if (lastname) { updateUser.lastname = lastname };
+        if (age) { updateUser.age = age };
+        
 
 
         //Find the user to be updated and update it
@@ -151,10 +159,14 @@ router.put('/updateuser/:id', fetchuser, async (req, res) => {
         let user = await User.findById(req.params.id);
 
         //comparing user entered password in database
-        const passwordCompare = await bcrypt.compare(password, user.password);
-        if (!passwordCompare) {
-            return res.status(400).json({ success: success, message: 'Entered password is wrong' });
-        }
+        if (password){ 
+            updateUser.password = securePass;
+            const passwordCompare = await bcrypt.compare(password, user.password);
+            if (!passwordCompare) {
+                return res.status(400).json({ success: success, message: 'Entered password is wrong' });
+            }
+        };
+        
 
         if (!user) { return res.status(404).send("Not Found") }
 
@@ -211,7 +223,7 @@ router.delete('/deleteUser/:id', fetchuser, async (req, res) => {
 
         for (const note of notes) {
             console.log(note.user);
-            await Note.deleteMany({user:note.user});
+            await Note.deleteMany({ user: note.user });
         }
 
         // if(notes){

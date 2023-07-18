@@ -10,8 +10,7 @@ const NoteState = (props) => {
 
     const [notes, setNotes] = useState(initialNotes)
 
-    const initialUser = [];
-    const [userdetail, setUserdetail] = useState(initialUser)
+    const [userdetail, setUserdetail] = useState('')
 
     //Fetch User
     const fetchUser = async () => {
@@ -22,16 +21,13 @@ const NoteState = (props) => {
                 "auth-token": authToken
             },
 
-            // body: JSON.stringify({}), // body data type must match "Content-Type" header
         });
         const json = await response.json(); //parsing
-        console.log(json);
-        // setUserdetail([json])
-        setUserdetail(JSON.parse(JSON.stringify(json)));
+        setUserdetail(json);
     }
 
     // Update user
-    const editUser = async (id, name, password, newPassword) => {
+    const editUser = async (id, name, lastname, age, password, newPassword) => {
         //API call
         const response = await fetch(`${host}/api/auth/updateuser/${id}`, {
             method: "PUT",
@@ -40,22 +36,32 @@ const NoteState = (props) => {
                 "auth-token": authToken
             },
 
-            body: JSON.stringify({ name, password, newPassword }), // body data type must match "Content-Type" header
+            body: JSON.stringify({ name, lastname, age, password, newPassword }), // body data type must match "Content-Type" header
         });
         // return response.json(); // parses JSON response into native JavaScript objects
         const json = await response.json();
+        console.log("After clicking on update - log from Edituser function from NoteState.js")
         console.log(json)
 
-        let updatedUser = JSON.parse(JSON.stringify(notes))
+        let updatedUser = JSON.parse(JSON.stringify(json))
         //Logic to edit in client
-        for (let index = 0; index < updatedUser.length; index++) {
-            const element = updatedUser[index];
-            if (element._id === id) {
-                updatedUser[index].name = name;
-                updatedUser[index].password = newPassword;
-                
-                break;
-            }
+
+        updatedUser = updatedUser.user;
+
+        if (updatedUser._id === id) {
+
+            let newupdatedUser = {
+                ...userdetail,
+                user: {
+                    ...userdetail.user,
+                    name: updatedUser.name,
+                    lastname: updatedUser.lastname,
+                    age: updatedUser.age
+                }
+            };
+
+            setUserdetail(newupdatedUser);
+
         }
 
         if (json.success) {
@@ -64,13 +70,13 @@ const NoteState = (props) => {
         } else {
             if (json.message === undefined) {
                 props.showalert(`Oops unable to update your details`, 'danger');
-                console.log(json.message+'Unable to update your details')
+                console.log(json.message + 'Unable to update your details')
             } else {
                 props.showalert(`${json.message}`, 'danger');
                 console.log(json.message)
             }
         }
-        setUserdetail(updatedUser)
+
     }
 
 
@@ -127,7 +133,7 @@ const NoteState = (props) => {
             // body: JSON.stringify({ title, description, tag }), // body data type must match "Content-Type" header
         });
         const json = await response.json(); //parsing
-        console.log(json);
+        // console.log(json);
         setNotes(json);
     }
 
@@ -154,7 +160,7 @@ const NoteState = (props) => {
         } else {
             if (json.message === undefined) {
                 props.showalert(`Oops unable to delete your note`, 'danger');
-                console.log(json.message+'Unable to add your note')
+                console.log(json.message + 'Unable to add your note')
             } else {
                 props.showalert(`${json.message}`, 'danger');
                 console.log(json.message)
@@ -191,7 +197,7 @@ const NoteState = (props) => {
         } else {
             if (json.message === undefined) {
                 props.showalert(`Oops unable to delete your note`, 'danger');
-                console.log(json.message+'Unable to add your note')
+                console.log(json.message + 'Unable to add your note')
             } else {
                 props.showalert(`${json.message}`, 'danger');
                 console.log(json.message)
@@ -221,7 +227,7 @@ const NoteState = (props) => {
         console.log(json)
 
         let updatedNotes = JSON.parse(JSON.stringify(notes))
-        //Logic to edit in client
+        //Logic to edit state
         for (let index = 0; index < updatedNotes.length; index++) {
             const element = updatedNotes[index];
             if (element._id === id) {
@@ -238,7 +244,7 @@ const NoteState = (props) => {
         } else {
             if (json.message === undefined) {
                 props.showalert(`Oops unable to update your note`, 'danger');
-                console.log(json.message+'Unable to add your note')
+                console.log(json.message + 'Unable to add your note')
             } else {
                 props.showalert(`${json.message}`, 'danger');
                 console.log(json.message)

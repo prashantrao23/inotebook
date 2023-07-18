@@ -7,6 +7,14 @@ const userSchema = new Schema({
         type: String,
         requied: true
     },
+    lastname:{
+        type: String,
+        requied: true
+    },
+    age:{
+        type: Number,
+        requied: true
+    },
     email: {
         type: String,
         requied: true,

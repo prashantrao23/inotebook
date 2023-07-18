@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from './components/Navbar';
 import Home from './components/Home';
-import About from './components/About';
 import NoteState from "./context/notes/NoteState";
 import './App.css';
 import Alerts from "./components/Alerts";
@@ -38,7 +37,6 @@ function App() {
           <Routes>
 
             <Route exact path='/' element={<Home showalert={showalert} />} />
-            <Route exact path='/about' element={<About />} />
             <Route exact path='/login' element={<Login showalert={showalert}/>} />
             <Route exact path='/singup' element={<Singup showalert={showalert}/>} />
             <Route exact path='/user' element={<User showalert={showalert}/>} />
