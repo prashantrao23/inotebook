@@ -115,7 +115,7 @@ const Notes = (props) => {
                 {notes.map((note) => {
                     return <div className="" key={note._id}>
                         <Noteitem note={note} updateNote={updateNote} />
-                    </div>;
+                    </div>
                 })}
 
             </div>

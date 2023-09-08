@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import NoteState from "./context/notes/NoteState";
@@ -29,7 +29,7 @@ function App() {
   return (
     //Now the state of NoteState will be available inside all of below components and all components which are available inside below components
     <NoteState showalert={showalert}>
-      <BrowserRouter>
+     
 
         <Navbar showalert={showalert}/>
         <div className="">
@@ -43,7 +43,7 @@ function App() {
 
           </Routes>
         </div>
-      </BrowserRouter>
+      
     </NoteState>
   );
 }
